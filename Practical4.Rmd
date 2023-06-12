@@ -3,7 +3,6 @@ title: "Kaminda - Practical 4"
 output: html_notebook
 ---
 
-
 ```{r}
 install.packages("xgboost")
 install.packages("eegkit")
@@ -27,7 +26,6 @@ library(purrr)
 library(ggplot2)
 ```
 
-
 ```{r parse_data}
 eeg_url <- "https://h2o-public-test-data.s3.amazonaws.com/smalldata/eeg/eeg_eyestate_splits.csv"
 eeg_data <- read.csv(eeg_url)
@@ -44,20 +42,9 @@ print(table(eeg_train$eyeDetection))
 eeg_validate <- subset(eeg_data, split == 'valid', select = -split)
 eeg_test <- subset(eeg_data, split == 'test', select = -split)
 ```
+
 **0**
-```{r}
-str(eeg_data)
-```
 
-```{r}
-num_samples <- nrow(eeg_data)
-```
-
-```{r}
-duration <- 117  # In seconds
-samples_per_second <- num_samples / duration
-
-```
 
 ```{r}
 num_samples <- nrow(eeg_data)
@@ -68,7 +55,7 @@ samples_per_second
 
 ```
 
-# Approximately 43 samples per second were taken.
+# Approximately 128 samples per second were taken.
 
 **1**
 
@@ -79,7 +66,7 @@ num_electrodes
 
 ```
 
-# In the paper, there were 14 sensors were used. For this person, 6 sensors were used.
+# there were 17 sensors used.
 
 ### Exploratory Data Analysis
 
@@ -104,7 +91,6 @@ ggplot2::ggplot(melt, ggplot2::aes(x=ds, y=microvolts, color=Electrode)) +
 **3**
 
 # I anticipate that there will be similar correlation; that in the time right before and after opening, the EEG will be most intense, and in the time when eyes are closed, the EEG will be the least intense.
-
 
 ```{r compare_distrib}
 melt_train <- reshape2::melt(eeg_train, id.vars=c("eyeDetection", "ds"), variable.name = "Electrode", value.name = "microvolts")
@@ -133,11 +119,11 @@ apply(eeg_train, 2, tseries::adf.test)
 
 **5**
 
-# Stationarity refers to the statistical properties of a time-series not changing over time. A stationary time-series will have a constant mean and variance, and will generally exhibit a linear function.  
+# Stationarity refers to the statistical properties of a time-series not changing over time. A stationary time-series will have a constant mean and variance, and will generally exhibit a linear function.
 
 **6**
 
-# We are interested in stationarity 
+# We are interested in stationarity
 
 ```{r correlation}
 forecast::ggAcf(eeg_train %>% dplyr::select(-ds))
@@ -145,11 +131,9 @@ forecast::ggAcf(eeg_train %>% dplyr::select(-ds))
 
 **7**
 
-# The fields that show...
-
+# The fields that show signs of strong autocorrelation are F7, FC5, FC6, and F4.
 
 ###Frequency-Space
-
 
 ```{r fft_open}
 eegkit::eegpsd(eeg_train %>% dplyr::filter(eyeDetection == 0) %>% dplyr::select(-eyeDetection, -ds), Fs = Fs, xlab="Eye Open")
@@ -162,7 +146,6 @@ eegkit::eegpsd(eeg_train %>% dplyr::filter(eyeDetection == 1) %>% dplyr::select(
 **8**
 
 # There are differences...
-
 
 ###Independent Component Analysis
 
@@ -182,7 +165,6 @@ ggplot2::ggplot(mix_melt, ggplot2::aes(x=ds, y=M, color=`Independent Component`)
 ```
 
 **9**
-
 
 ###Eye Opening Prediction
 
@@ -216,7 +198,6 @@ print(model)
 ```{r test}
 
 ```
-
 
 **12**
 
