@@ -1,0 +1,30 @@
+---
+title: "Kaminda - Practical 4"
+output: html_notebook
+---
+
+
+```{r}
+install.packages("xgboost")
+install.packages("eegkit")
+install.packages("forecast")
+install.packages("tseries")
+install.packages("caret")
+```
+
+
+```{r}
+library(xgboost)
+library(eegkit)
+library(forecast)
+library(tseries)
+library(caret)
+```
+
+```{r}
+library(dplyr)
+library(reshape2)
+library(purrr)
+library(ggplot2)
+```
+
