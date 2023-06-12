@@ -103,7 +103,7 @@ ggplot2::ggplot(melt, ggplot2::aes(x=ds, y=microvolts, color=Electrode)) +
 
 **3**
 
-# I anticipate that 
+# I anticipate that there will be similar correlation; that in the time right before and after opening, the EEG will be most intense, and in the time when eyes are closed, the EEG will be the least intense.
 
 
 ```{r compare_distrib}
