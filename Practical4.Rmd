@@ -96,3 +96,60 @@ apply(eeg_train, 2, tseries::adf.test)
 **5**
 
 # Stationarity is 
+
+
+**6**
+
+# We are interested in stationarity
+
+```{r correlation}
+forecast::ggAcf(eeg_train %>% dplyr::select(-ds))
+```
+
+**7**
+
+# The fields that show...
+
+
+###Frequency-Space
+
+
+```{r fft_open}
+eegkit::eegpsd(eeg_train %>% dplyr::filter(eyeDetection == 0) %>% dplyr::select(-eyeDetection, -ds), Fs = Fs, xlab="Eye Open")
+```
+
+```{r fft_closed}
+eegkit::eegpsd(eeg_train %>% dplyr::filter(eyeDetection == 1) %>% dplyr::select(-eyeDetection, -ds), Fs = Fs, xlab="Eye Closed")
+```
+
+**8**
+
+# There are differences...
+
+
+###Independent Component Analysis
+
+```{r ica, warning=FALSE}
+ica <- eegkit::eegica(eeg_train %>% dplyr::select(-eyeDetection, -ds), nc=3, method='fast', type='time')
+mix <- dplyr::as_tibble(ica$M)
+mix$eyeDetection <- eeg_train$eyeDetection
+mix$ds <- eeg_train$ds
+
+mix_melt <- reshape2::melt(mix, id.vars=c("eyeDetection", "ds"), variable.name = "Independent Component", value.name = "M")
+
+
+ggplot2::ggplot(mix_melt, ggplot2::aes(x=ds, y=M, color=`Independent Component`)) + 
+  ggplot2::geom_line() + 
+  ggplot2::geom_vline(ggplot2::aes(xintercept=ds), data=dplyr::filter(mix_melt, eyeDetection==1), alpha=0.005) +
+  ggplot2::scale_y_log10()
+```
+
+**9**
+
+
+###Eye Opening Prediction
+
+```{r}
+
+```
+
