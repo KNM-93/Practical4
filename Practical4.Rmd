@@ -133,12 +133,11 @@ apply(eeg_train, 2, tseries::adf.test)
 
 **5**
 
-# Stationarity is 
-
+# Stationarity refers to the statistical properties of a time-series not changing over time. A stationary time-series will have a constant mean and variance, and will generally exhibit a linear function.  
 
 **6**
 
-# We are interested in stationarity
+# We are interested in stationarity 
 
 ```{r correlation}
 forecast::ggAcf(eeg_train %>% dplyr::select(-ds))
