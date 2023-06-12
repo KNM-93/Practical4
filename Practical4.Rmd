@@ -27,16 +27,17 @@ library(purrr)
 library(ggplot2)
 ```
 
+
 ```{r parse_data}
 eeg_url <- "https://h2o-public-test-data.s3.amazonaws.com/smalldata/eeg/eeg_eyestate_splits.csv"
 eeg_data <- read.csv(eeg_url)
 
-# add timestamp
+# Adding timestamp
 Fs <- 117 / nrow(eeg_data)
 eeg_data <- transform(eeg_data, ds = seq(0, 116.99999, by = Fs), eyeDetection = as.factor(eyeDetection))
 print(table(eeg_data$eyeDetection))
 
-# split dataset into train, validate, test
+# Splitting dataset into train, validate, test
 eeg_train <- subset(eeg_data, split == 'train', select = -split)
 print(table(eeg_train$eyeDetection))
 
@@ -44,10 +45,41 @@ eeg_validate <- subset(eeg_data, split == 'valid', select = -split)
 eeg_test <- subset(eeg_data, split == 'test', select = -split)
 ```
 **0**
+```{r}
+str(eeg_data)
+```
 
+```{r}
+num_samples <- nrow(eeg_data)
+```
+
+```{r}
+duration <- 117  # In seconds
+samples_per_second <- num_samples / duration
+
+```
+
+```{r}
+num_samples <- nrow(eeg_data)
+duration <- 117  # In seconds
+samples_per_second <- num_samples / duration
+
+samples_per_second
+
+```
+
+# Approximately 43 samples per second were taken.
 
 **1**
 
+```{r}
+num_electrodes <- ncol(eeg_data)
+
+num_electrodes
+
+```
+
+# In the paper, there were 14 sensors were used. For this person, 6 sensors were used.
 
 ### Exploratory Data Analysis
 
@@ -67,7 +99,12 @@ ggplot2::ggplot(melt, ggplot2::aes(x=ds, y=microvolts, color=Electrode)) +
 
 **2**
 
+# The EEG appears to be more intense in the periods right before the eyes open and right before they close.
+
 **3**
+
+# I anticipate that 
+
 
 ```{r compare_distrib}
 melt_train <- reshape2::melt(eeg_train, id.vars=c("eyeDetection", "ds"), variable.name = "Electrode", value.name = "microvolts")
