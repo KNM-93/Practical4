@@ -123,6 +123,7 @@ filt_melt_train %>% dplyr::group_by(eyeDetection, Electrode) %>%
 
 **4**
 
+# Based on these analyses, electrodes F8, O2, and P7 are consistently more intense than the others.
 
 ### Time-Related Trends
 
