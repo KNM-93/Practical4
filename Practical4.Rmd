@@ -166,6 +166,8 @@ ggplot2::ggplot(mix_melt, ggplot2::aes(x=ds, y=M, color=`Independent Component`)
 
 **9**
 
+# Yes, this ICA suggests that eye opening relates to an independent component of activity across the electrodes.
+
 ###Eye Opening Prediction
 
 ```{r xgboost}
