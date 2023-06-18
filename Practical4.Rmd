@@ -179,7 +179,7 @@ eeg_validate_matrix <- as.matrix(dplyr::select(eeg_validate, -eyeDetection, -ds)
 eeg_validate_labels <- as.numeric(eeg_validate$eyeDetection) -1
 
 # Build the xgboost model
-model <- xgboost(data = eeg_train_matrix, 
+model_xgboost <- xgboost(data = eeg_train_matrix, 
                  label = eeg_train_labels,
                  nrounds = 100,
                  max_depth = 4,
@@ -193,7 +193,7 @@ print(model)
 # Assuming you have chosen XGBoost as the model to evaluate
 
 # Make predictions on the validation data using the XGBoost model
-xgboost_pred <- predict(model, eeg_validate_matrix)
+xgboost_pred <- predict(model_xgboost, eeg_validate_matrix)
 
 # Convert the predicted values to binary predictions (0 or 1)
 xgboost_pred_binary <- ifelse(xgboost_pred > 0.5, 1, 0)
@@ -229,7 +229,7 @@ train_control <- trainControl(
 )
 
 # Defining the Neural Network model
-model <- train(
+model_nnt <- train(
   x = eeg_train_matrix, 
   y = eeg_train_labels,
   method = "nnet",        # Neural Network algorithm
@@ -242,29 +242,61 @@ print(model)
 ```
 
 ```{r nnet evaluation}
-# Assuming you have chosen Neural Network (nnet) as the model to evaluate
 
-# Make predictions on the validation data using the Neural Network model
-nnet_pred <- predict(model, eeg_validate_matrix)
+# Making predictions on the validation data using the Neural Network model
+nnet_pred <- predict(model_nnt, eeg_validate_matrix)
 
-# Convert the predicted values to binary predictions (0 or 1)
+# Converting the predicted values to binary predictions (0 or 1)
 nnet_pred_binary <- ifelse(nnet_pred > 0.5, 1, 0)
 
-# Compute accuracy on the validation data
+# Computing accuracy on the validation data
 validation_accuracy <- mean(nnet_pred_binary == eeg_validate_labels)
 
-# Print the validation accuracy
+# Printing the validation accuracy
 cat("Validation Accuracy:", validation_accuracy, "\n")
 
 ```
 
 **11**
 
-```{r test}
+```{r test accuracy}
+
+# Make predictions on the test data using the XGBoost model
+test_pred <- predict(model_xgboost, )
+
+# Convert the predicted values to binary predictions (0 or 1)
+test_pred_binary <- ifelse(test_pred > 0.5, 1, 0)
+
+# Compute accuracy on the test data
+test_accuracy <- mean(test_pred_binary == eeg_test_labels)
+
+# Print the test accuracy
+cat("Test Accuracy:", test_accuracy, "\n")
+
+```
+
+
+```{r}
+# Making predictions on the test data using the XGBoost model
+test_pred <- predict(model, eeg_test_matrix)
+
+# Converting the predicted values to binary predictions (0 or 1)
+test_pred_binary <- ifelse(test_pred > 0.5, 1, 0)
+
+# Computing accuracy on the test data
+test_accuracy <- mean(test_pred_binary == eeg_test_labels)
+
+# Printing the test accuracy
+cat("Test Accuracy:", test_accuracy, "\n")
 
 ```
 
 **12**
+# We can also model eye opening predictions from EEG's using the frequency domain or the state space domain.
+
+# With the frequency domain, we can use the Laplace or Fourier methods.
+
+# With the state space domain, we can use the Hidden Markov models.
 
 **13**
 
