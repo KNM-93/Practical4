@@ -193,7 +193,6 @@ print(model)
 ```
 
 ```{r XGBOOST evaluation}
-# Assuming you have chosen XGBoost as the model to evaluate
 
 # Make predictions on the validation data using the XGBoost model
 xgboost_pred <- predict(model_xgboost, eeg_validate_matrix)
@@ -209,7 +208,6 @@ cat("Validation Accuracy:", validation_accuracy, "\n")
 ```
 
 **10**
-
 
 ```{r}
 library(caret)
@@ -262,6 +260,8 @@ cat("Validation Accuracy:", validation_accuracy, "\n")
 
 **11**
 
+# XGBoost was my best performing model with a validation accuracy of 0.83. My nnet model had a validation accuracy of 0.69. 
+
 
 ```{r XGBOOST test performance}
 
@@ -285,8 +285,10 @@ test_accuracy <- mean(test_pred_binary == eeg_test_labels)
 cat("Test Accuracy:", test_accuracy, "\n")
 ```
 
+# The test accuracy of the XGBoost model is 0.84.
 
 **12**
+
 # We can also model eye opening predictions from EEG's using the frequency domain or the state space domain.
 
 # With the frequency domain, we can use the Laplace methods.
