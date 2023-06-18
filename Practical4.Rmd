@@ -294,10 +294,30 @@ cat("Test Accuracy:", test_accuracy, "\n")
 **12**
 # We can also model eye opening predictions from EEG's using the frequency domain or the state space domain.
 
-# With the frequency domain, we can use the Laplace or Fourier methods.
+# With the frequency domain, we can use the Laplace methods.
 
 # With the state space domain, we can use the Hidden Markov models.
 
 **13**
 
+# To use the Laplace methods, I can load the "Laplace" package.
+
+```{r}
+#Installing package
+install.packages("Laplace")
+```
+
+# To use the Hidden Markov models, I can load the "RHmm" package.
+
+```{r}
+#Installing package
+install.packages("RHmm")
+```
+
 **14**
+
+# To help with the completion of the labs, I would have appreciated an additional online/in person "lab" scheduled on another day to get support with R.
+
+# The main takeaway for me from this course was the various methods for data analysis and machine learning different types of data in R. The main reason I took this course was so I could become more familiar with R.
+
+# Overall, I really enjoyed this course and it opened my eyes to the various applications of machine learning of health. Especially regarding potential careers or further study. Thank you for a great term Dr. Maguire!
