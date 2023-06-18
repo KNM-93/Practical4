@@ -42,9 +42,7 @@ print(table(eeg_train$eyeDetection))
 eeg_validate <- subset(eeg_data, split == 'valid', select = -split)
 eeg_test <- subset(eeg_data, split == 'test', select = -split)
 ```
-
 **0**
-
 
 ```{r}
 num_samples <- nrow(eeg_data)
@@ -66,7 +64,7 @@ num_electrodes
 
 ```
 
-# there were 17 sensors used.
+# There were 17 sensors used.
 
 ### Exploratory Data Analysis
 
@@ -106,7 +104,6 @@ filt_melt_train %>% dplyr::group_by(eyeDetection, Electrode) %>%
     dplyr::summarise(mean = mean(microvolts), median=median(microvolts), sd=sd(microvolts)) %>% 
     dplyr::arrange(Electrode)
 ```
-
 **4**
 
 # Based on these analyses, electrodes F8, O2, and P7 are consistently more intense than the others.
@@ -123,7 +120,7 @@ apply(eeg_train, 2, tseries::adf.test)
 
 **6**
 
-# We are interested in stationarity
+# We are interested in stationarity because we are modelling time-series data. Stationarity allows us to use a simplified analysis and make assumptions based on the stability of statistical properties.
 
 ```{r correlation}
 forecast::ggAcf(eeg_train %>% dplyr::select(-ds))
@@ -145,7 +142,13 @@ eegkit::eegpsd(eeg_train %>% dplyr::filter(eyeDetection == 1) %>% dplyr::select(
 
 **8**
 
-# There are differences...
+# I do see differences between the power spectral densitites for the two eye states. Here are a few:
+
+# The highest density occurs when eyes are open in channel 14.
+
+# The are more occurences of low densities (below zero) when eyes are closed. This is noted by the dark blue on the chart.
+
+# Generally speaking, when eyes are open, power spectral densities are higher.
 
 ###Independent Component Analysis
 
@@ -259,26 +262,18 @@ cat("Validation Accuracy:", validation_accuracy, "\n")
 
 **11**
 
-```{r test accuracy}
 
-# Make predictions on the test data using the XGBoost model
-test_pred <- predict(model_xgboost, )
+```{r XGBOOST test performance}
 
-# Convert the predicted values to binary predictions (0 or 1)
-test_pred_binary <- ifelse(test_pred > 0.5, 1, 0)
+# Converting the test dataset to a matrix
+eeg_test_matrix <- as.matrix(dplyr::select(eeg_test, -eyeDetection, -ds))
+eeg_test_labels <- as.numeric(eeg_test$eyeDetection) - 1
 
-# Compute accuracy on the test data
-test_accuracy <- mean(test_pred_binary == eeg_test_labels)
+# Creating a DMatrix object for the test data
+dtest <- xgb.DMatrix(data = eeg_test_matrix, label = eeg_test_labels)
 
-# Print the test accuracy
-cat("Test Accuracy:", test_accuracy, "\n")
-
-```
-
-
-```{r}
 # Making predictions on the test data using the XGBoost model
-test_pred <- predict(model, eeg_test_matrix)
+test_pred <- predict(model_xgboost, dtest)
 
 # Converting the predicted values to binary predictions (0 or 1)
 test_pred_binary <- ifelse(test_pred > 0.5, 1, 0)
@@ -288,8 +283,8 @@ test_accuracy <- mean(test_pred_binary == eeg_test_labels)
 
 # Printing the test accuracy
 cat("Test Accuracy:", test_accuracy, "\n")
-
 ```
+
 
 **12**
 # We can also model eye opening predictions from EEG's using the frequency domain or the state space domain.
