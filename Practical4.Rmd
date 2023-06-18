@@ -189,10 +189,72 @@ model <- xgboost(data = eeg_train_matrix,
 print(model)
 ```
 
+```{r XGBOOST evaluation}
+# Assuming you have chosen XGBoost as the model to evaluate
+
+# Make predictions on the validation data using the XGBoost model
+xgboost_pred <- predict(model, eeg_validate_matrix)
+
+# Convert the predicted values to binary predictions (0 or 1)
+xgboost_pred_binary <- ifelse(xgboost_pred > 0.5, 1, 0)
+
+# Compute accuracy on the validation data
+validation_accuracy <- mean(xgboost_pred_binary == eeg_validate_labels)
+
+# Print the validation accuracy
+cat("Validation Accuracy:", validation_accuracy, "\n")
+```
+
 **10**
 
-```{r model2}
 
+```{r}
+library(caret)
+```
+
+```{r model2 nnet}
+
+#Converting training and validation datasets to matrices
+eeg_train_matrix <- as.matrix(dplyr::select(eeg_train, -eyeDetection, -ds))
+eeg_train_labels <- as.numeric(eeg_train$eyeDetection) -1
+
+eeg_validate_matrix <- as.matrix(dplyr::select(eeg_validate, -eyeDetection, -ds))
+eeg_validate_labels <- as.numeric(eeg_validate$eyeDetection) -1
+
+#Defining training control
+train_control <- trainControl(
+  method = "cv",  # Cross-validation
+  number = 5,     # Number of folds
+  verboseIter = TRUE
+)
+
+# Defining the Neural Network model
+model <- train(
+  x = eeg_train_matrix, 
+  y = eeg_train_labels,
+  method = "nnet",        # Neural Network algorithm
+  trControl = train_control
+)
+
+# Printing the model
+print(model)
+
+```
+
+```{r nnet evaluation}
+# Assuming you have chosen Neural Network (nnet) as the model to evaluate
+
+# Make predictions on the validation data using the Neural Network model
+nnet_pred <- predict(model, eeg_validate_matrix)
+
+# Convert the predicted values to binary predictions (0 or 1)
+nnet_pred_binary <- ifelse(nnet_pred > 0.5, 1, 0)
+
+# Compute accuracy on the validation data
+validation_accuracy <- mean(nnet_pred_binary == eeg_validate_labels)
+
+# Print the validation accuracy
+cat("Validation Accuracy:", validation_accuracy, "\n")
 
 ```
 
